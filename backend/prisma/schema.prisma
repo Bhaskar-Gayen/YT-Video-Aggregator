@@ -1,0 +1,44 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Video {
+  id            String   @id @default(cuid())
+  videoId       String   @unique @map("video_id")
+  videoUrl      String   @map("video_url")
+  title         String
+  description   String   @db.Text
+  publishedAt   DateTime @map("published_at")
+  channelTitle  String   @map("channel_title")
+  channelId     String   @map("channel_id")
+  thumbnails    Json?
+  duration      Int?
+  viewCount     BigInt?  @map("view_count")
+  likeCount     BigInt?  @map("like_count")
+  commentCount  BigInt?  @map("comment_count")
+  createdAt     DateTime @default(now()) @map("created_at")
+  updatedAt     DateTime @updatedAt @map("updated_at")
+
+  @@index([publishedAt(sort: Desc)])
+  @@index([channelId])
+  @@map("videos")
+}
+
+model ApiKey {
+  id          String   @id @default(cuid())
+  keyValue    String   @unique @map("key_value")
+  quotaUsed   Int      @default(0) @map("quota_used")
+  quotaLimit  Int      @default(10000) @map("quota_limit")
+  lastReset   DateTime @default(now()) @map("last_reset")
+  isActive    Boolean  @default(true) @map("is_active")
+  failureCount Int      @default(0) @map("failure_count")
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  @@map("api_keys")
+}
