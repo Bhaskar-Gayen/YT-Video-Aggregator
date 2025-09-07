@@ -9,6 +9,7 @@
     "build": "tsc && tsc-alias",
     "start": "node -r tsconfig-paths/register dist/server.js",
     "start:worker": "ts-node src/jobs/videoFetchJob.ts",
+    "start:worker:prod": "ts-node src/jobs/videoFetchJob.ts",
     "db:generate": "prisma generate",
     "db:migrate": "prisma migrate dev",
     "migrate:deploy": "prisma migrate deploy",

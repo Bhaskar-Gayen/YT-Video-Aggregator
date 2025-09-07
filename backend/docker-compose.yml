@@ -1,0 +1,45 @@
+version: "3.9"
+
+services:
+  backend:
+    build: .
+    container_name: yt-backend
+    command: pnpm start:prod
+    ports:
+      - "3000:3000"
+    env_file:
+      - .env
+    depends_on:
+      - redis
+      - db
+
+  worker:
+    build: .
+    container_name: yt-worker
+    command: pnpm start:worker:prod
+    env_file:
+      - .env
+    depends_on:
+      - redis
+      - db
+
+  redis:
+    image: redis:7-alpine
+    container_name: yt-redis
+    ports:
+      - "6379:6379"
+
+  db:
+    image: postgres:16-alpine
+    container_name: yt-postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: ytvideo
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:
